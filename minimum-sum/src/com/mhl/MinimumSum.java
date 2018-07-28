@@ -9,35 +9,22 @@ public class MinimumSum {
       long total = 0;
       Range r = ranges[0];
       for (int i = 0; i < ranges.length - 1; i++) {
-        total = total + getGap(r, ranges[i + 1]);
-        r = getMerged(r, ranges[i + 1]);
+        int gap;
+        Range r2 = ranges[i + 1];
+        if (r2.from > r.to) {
+          gap = Math.abs(r2.from - r.to);
+          r = new Range(r2.from, r2.from);
+        } else if (r.from > r2.to) {
+          gap = Math.abs(r.from - r2.to);
+          r = new Range(r2.to, r2.to);
+        } else {
+          gap = 0;
+          r = new Range(Math.max(r.from, r2.from), Math.min(r.to, r2.to));
+        }
+        total = total + gap;
+        print(r);
       }
       return total;
-    }
-
-    private static int getGap(Range r1, Range r2) {
-      int gap;
-      if (r2.from > r1.to) {
-        gap = Math.abs(r2.from - r1.to);
-      } else if (r1.from > r2.to) {
-        gap = Math.abs(r1.from - r2.to);
-      } else {
-        gap = 0;
-      }
-      return gap;
-    }
-
-    private static Range getMerged(Range r1, Range r2) {
-      Range r;
-      if (r2.from > r1.to) {
-        r = new Range(r2.from, r2.from);
-      } else if (r1.from > r2.to) {
-        r = new Range(r2.to, r2.to);
-      } else {
-        r = new Range(Math.max(r1.from, r2.from), Math.min(r1.to, r2.to));
-      }
-      print(r);
-      return r;
     }
 
     public static void main(String[] args) {
