@@ -7,6 +7,7 @@ public class CalculateSubstrings {
     System.out.println("---------------- Result: " + calculateSubstrings("bbb"));
     System.out.println("---------------- Result: " +calculateSubstrings("baaaaa"));
     System.out.println("---------------- Result: " +calculateSubstrings("abcabc"));
+    System.out.println("---------------- Result: " +calculateSubstrings("testtesttest"));
   }
 
   /**
@@ -33,12 +34,15 @@ public class CalculateSubstrings {
         System.out.println("YYW - Y2 " + x.substring(y, y + y));
 
         if (x.substring(w, w+y).equalsIgnoreCase(x.substring(w + y))) {
+          System.out.println("One!");
           match++;
         }
         if (x.substring(0, y).equalsIgnoreCase(x.substring(w + y))) {
+          System.out.println("two!");
           match++;
         }
         if (x.substring(0, y).equalsIgnoreCase(x.substring(y, y + y))){
+          System.out.println("three!");
           match++;
         }
       }
