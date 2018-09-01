@@ -2,7 +2,9 @@ package com.mhl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 public class RPN4 {
@@ -30,20 +32,17 @@ public class RPN4 {
         if (s1[1] == null) {
           for (String[] a : rpn3S(s2[0], s2[1], s2[2])) {
             list.add(new String[] { s1[0], a[0], a[1], a[2], a[3], a[4], op });
-            list.add(new String[] { a[0], a[1], a[2], a[3], a[4],  s1[0], op });
           }
         } else if (s1[2] == null) {
             for (String[] a : rpn2S(s1[0], s1[1])) {
               for (String[] b : rpn2S(s2[0], s2[1])) {
                 list.add(new String[] { a[0], a[1], a[2], b[0], b[1], b[2], op });
-                list.add(new String[] { b[0], b[1], b[2], a[0], a[1], a[2], op});
               }
             }
 
         } else {
           for (String[] a : rpn3S(s1[0], s1[1], s1[2])) {
             list.add(new String[] { a[0], a[1], a[2], a[3], a[4], s2[0], op });
-            list.add(new String[] { s2[0], a[0], a[1], a[2], a[3], a[4], op });
           }
         }
       }
@@ -74,12 +73,10 @@ public class RPN4 {
         if (s1[1] == null) {
           for (String[] a : rpn2S(s2[0], s2[1])) {
             list.add(new String[] { s1[0], a[0], a[1], a[2], op });
-            list.add(new String[] { a[0], a[1], a[2], s1[0], op });
           }
         } else {
           for (String[] a : rpn2S(s1[0], s1[1])) {
             list.add(new String[] { a[0], a[1], a[2], s2[0], op });
-            list.add(new String[] { s2[0], a[0], a[1], a[2], op });
           }
         }
       }
@@ -100,16 +97,21 @@ public class RPN4 {
   private static void rpn4(String n1, String n2, String n3, String n4, int result) {
     System.out.printf("\n\nNumbers: [%s,%s,%s,%s], Expected:%d\n", n1,n2,n3,n4,result);
     boolean found = false;
+    Set<String> set = new HashSet<>();
     for (String[] token: rpn4S(n1,n2,n3, n4)) {
       try {
         if (eval(token).compareTo(new BigDecimal(result)) == 0) {
           found = true;
-          System.out.printf("Solution :\t%s = %d\n", convert(toString(token)), result);
-          //TODO If want to print all possible solutions, comment below
-          break;
+          String s= convert(toString(token));
+          if (!set.contains(s)) {
+            System.out.printf("Solution :\t%s = %d\n", s, result);
+            set.add(s);
+            //TODO If want to print all possible solutions, comment below
+            break;
+          }
         }
       } catch (Exception e) {
-        // Ignored
+        //  divide by zero, ignored combinations
       }
     }
     if (!found) System.out.println("No solution!");
@@ -182,13 +184,10 @@ public class RPN4 {
         Formula l = expr.pop();
 
         int opPrec = idx / 2;
-
-        if (l.prec < opPrec || (l.prec == opPrec && c == '^'))
+        if (l.prec < opPrec || (l.prec == opPrec))
           l.ex = '(' + l.ex + ')';
-
-        if (r.prec < opPrec || (r.prec == opPrec && c != '^'))
+        if (r.prec < opPrec || (r.prec == opPrec))
           r.ex = '(' + r.ex + ')';
-
         expr.push(new Formula(l.ex, r.ex, token));
       } else {
         expr.push(new Formula(token));
@@ -305,7 +304,7 @@ public class RPN4 {
     rpn4("6", "1", "4", "8",  99);
     rpn4("5", "5", "5", "1",  24);
     long end = System.currentTimeMillis();
-    System.out.printf("\nTotal time: %d", end-start);
+    System.out.printf("\nTotal time: %d Millis", end-start);
 
   }
 
