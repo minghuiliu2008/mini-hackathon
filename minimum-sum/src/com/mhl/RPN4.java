@@ -110,7 +110,7 @@ public class RPN4 {
         // Ignored
       }
     }
-    if (!found) System.out.println("No solution!\n");
+    if (!found) System.out.println("No solution!");
   }
 
   private static String toString(String[] arr) {
