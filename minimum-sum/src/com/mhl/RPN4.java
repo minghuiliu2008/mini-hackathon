@@ -202,6 +202,8 @@ public class RPN4 {
     /**
      * Testing...
      */
+    long start = System.currentTimeMillis();
+
     rpn4("7","8","5","5", 1);
     rpn4("8","2","8","5", 2);
     rpn4("2","1","5","5", 3);
@@ -301,8 +303,9 @@ public class RPN4 {
     rpn4("3", "3", "5", "3",  97);
     rpn4("5", "4", "1", "9",  98);
     rpn4("6", "1", "4", "8",  99);
-
     rpn4("5", "5", "5", "1",  24);
+    long end = System.currentTimeMillis();
+    System.out.printf("\nTotal time: %d", end-start);
 
   }
 
