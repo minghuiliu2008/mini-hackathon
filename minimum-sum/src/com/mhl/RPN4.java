@@ -74,10 +74,12 @@ public class RPN4 {
         if (s1[1] == null) {
           for (String[] a : rpn2S(s2[0], s2[1])) {
             list.add(new String[] { s1[0], a[0], a[1], a[2], op });
+            list.add(new String[] { a[0], a[1], a[2], s1[0], op });
           }
         } else {
           for (String[] a : rpn2S(s1[0], s1[1])) {
             list.add(new String[] { a[0], a[1], a[2], s2[0], op });
+            list.add(new String[] { s2[0], a[0], a[1], a[2], op });
           }
         }
       }
@@ -129,7 +131,7 @@ public class RPN4 {
     for(String t : tokens){
       if(!operators.contains(t)){
         stack.push(t);
-      }else{
+      } else {
         BigDecimal a = new BigDecimal(stack.pop());
         BigDecimal b = new BigDecimal(stack.pop());
         int index = operators.indexOf(t);
@@ -153,14 +155,14 @@ public class RPN4 {
   }
 
   private static String convert(final String rpn) {
-    class Expression {
+    class Formula {
       private final static String ops = "-+/*";
       private String ex;
       private int prec = 3;
-      private Expression(String e) {
+      private Formula(String e) {
         ex = e;
       }
-      private Expression(String e1, String e2, String o) {
+      private Formula(String e1, String e2, String o) {
         ex = String.format("%s %s %s", e1, o, e2);
         prec = ops.indexOf(o) / 2;
       }
@@ -170,14 +172,14 @@ public class RPN4 {
         return ex;
       }
     }
-    Stack<Expression> expr = new Stack<>();
+    Stack<Formula> expr = new Stack<>();
     for (String token : rpn.split("\\s+")) {
       char c = token.charAt(0);
-      int idx = Expression.ops.indexOf(c);
+      int idx = Formula.ops.indexOf(c);
       if (idx != -1 && token.length() == 1) {
 
-        Expression r = expr.pop();
-        Expression l = expr.pop();
+        Formula r = expr.pop();
+        Formula l = expr.pop();
 
         int opPrec = idx / 2;
 
@@ -187,9 +189,9 @@ public class RPN4 {
         if (r.prec < opPrec || (r.prec == opPrec && c != '^'))
           r.ex = '(' + r.ex + ')';
 
-        expr.push(new Expression(l.ex, r.ex, token));
+        expr.push(new Formula(l.ex, r.ex, token));
       } else {
-        expr.push(new Expression(token));
+        expr.push(new Formula(token));
       }
     }
     return expr.peek().ex;
