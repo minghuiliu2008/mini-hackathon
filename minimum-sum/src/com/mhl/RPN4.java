@@ -96,7 +96,7 @@ public class RPN4 {
   }
 
   private static void rpn4(String n1, String n2, String n3, String n4, int result) {
-    System.out.printf("\n\nNumbers: [%s,%s,%s,%s], Expected:%d\n", n1,n2,n3,n4,result);
+//    System.out.printf("\n\nNumbers: [%s,%s,%s,%s], Expected:%d\n", n1,n2,n3,n4,result);
     boolean found = false;
     Set<String> set = new HashSet<>();
     for (String[] token: rpn4S(n1,n2,n3, n4)) {
@@ -115,7 +115,7 @@ public class RPN4 {
         //  divide by zero, ignored combinations
       }
     }
-    if (!found) System.out.println("No solution!");
+    if (!found) System.out.printf("[%s,%s,%s,%s] = %d: No solution!\n", n1,n2,n3,n4, result);
   }
 
   private static String toString(String[] arr) {
@@ -149,13 +149,13 @@ public class RPN4 {
           stack.push(a.multiply(b).toString());
           break;
         case 3:
-          stack.push(String.valueOf(b.divide(a, 5, BigDecimal.ROUND_HALF_UP).toString()));
+          stack.push(String.valueOf(b.divide(a, 4, BigDecimal.ROUND_HALF_UP).toString()));
           break;
         }
       }
     }
     BigDecimal result = new BigDecimal(stack.pop());
-    return result.round(new MathContext(4));
+    return result.round(new MathContext(3));
   }
 
   private static String convert(final String rpn) {
