@@ -1,6 +1,7 @@
 package com.mhl;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -148,12 +149,13 @@ public class RPN4 {
           stack.push(a.multiply(b).toString());
           break;
         case 3:
-            stack.push(String.valueOf(b.divide(a).toString()));
-            break;
+          stack.push(String.valueOf(b.divide(a, 5, BigDecimal.ROUND_HALF_UP).toString()));
+          break;
         }
       }
     }
-    return new BigDecimal(stack.pop());
+    BigDecimal result = new BigDecimal(stack.pop());
+    return result.round(new MathContext(4));
   }
 
   private static String convert(final String rpn) {
